@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusVoid Hub</title>
+    <style>
+        body {
+            background-color: #0f0f0f;
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            padding: 40px 0;
+        }
+        h1 {
+            color: #00ff88;
+            font-size: 3.5em;
+            margin: 0;
+            text-shadow: 0 0 10px rgba(0,255,136,0.5);
+        }
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .nav-item {
+            background: #1a1a1a;
+            border: 2px solid #00ff88;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .nav-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,255,136,0.3);
+        }
+        .nav-item h2 {
+            color: #00ff88;
+            margin: 0 0 10px 0;
+        }
+        .nav-item p {
+            color: #888;
+            margin: 0;
+        }
+        .proxy-container {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        #proxyInput {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #00ff88;
+            background: #0f0f0f;
+            color: white;
+            border-radius: 5px;
+        }
+        .proxy-btn {
+            background: #00ff88;
+            color: #0f0f0f;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .game-card {
+            background: #1a1a1a;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        .game-card img {
+            width: 100%;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>NexusVoid Hub</h1>
+        </div>
+        
+        <div class="nav-grid">
+            <div class="nav-item" onclick="showGames()">
+                <h2>Games</h2>
+                <p>Play unlimited games</p>
+            </div>
+            <div class="nav-item" onclick="showProxy()">
+                <h2>Proxy</h2>
+                <p>Browse freely</p>
+            </div>
+            <div class="nav-item" onclick="showEmulators()">
+                <h2>Emulators</h2>
+                <p>Classic gaming</p>
+            </div>
+        </div>
+
+        <div class="proxy-container">
+            <input type="text" id="proxyInput" placeholder="Enter URL to browse...">
+            <button class="proxy-btn" onclick="startProxy()">Go</button>
+        </div>
+
+        <div class="games-grid" id="gamesSection">
+            <!-- Game cards will be dynamically added here -->
+        </div>
+    </div>
+
+    <script>
+        function showGames() {
+            const gamesSection = document.getElementById('gamesSection');
+            // Add game loading logic here
+        }
+
+        function showProxy() {
+            // Proxy activation logic
+        }
+
+        function showEmulators() {
+            // Emulator section logic
+        }
+
+        function startProxy() {
+            const url = document.getElementById('proxyInput').value;
+            // Proxy connection logic
+        }
+
+        // Dynamic game loading
+        const games = [
+            {name: 'Minecraft', img: 'minecraft.jpg'},
+            {name: 'Among Us', img: 'amongus.jpg'},
+            {name: 'Subway Surfers', img: 'subway.jpg'}
+            // Add more games
+        ];
+
+        window.onload = () => {
+            const gamesSection = document.getElementById('gamesSection');
+            games.forEach(game => {
+                const gameCard = document.createElement('div');
+                gameCard.className = 'game-card';
+                gameCard.innerHTML = `
+                    <h3>${game.name}</h3>
+                    <button onclick="loadGame('${game.name}')" class="proxy-btn">Play</button>
+                `;
+                gamesSection.appendChild(gameCard);
+            });
+        };
+    </script>
+</body>
+</html>
