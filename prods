@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Game Hub</title>
+    <style>
+        /* Your complete CSS here */
+        :root {
+            --primary: #1a1a1a;
+            --secondary: #2d2d2d;
+            --accent: #00ff95;
+            --text: #ffffff;
+            --hover: #00cc76;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: var(--primary);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        .header {
+            background: var(--secondary);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent);
+            text-shadow: 0 0 10px rgba(0,255,149,0.5);
+        }
+
+        .search-bar {
+            width: 300px;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: 2px solid var(--accent);
+            background: var(--primary);
+            color: var(--text);
+            outline: none;
+        }
+
+        /* Game Grid */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .game-card {
+            background: var(--secondary);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,255,149,0.2);
+        }
+
+        .game-thumb {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .game-info {
+            padding: 1rem;
+        }
+
+        .game-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .play-btn {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s ease;
+        }
+
+        .play-btn:hover {
+            background: var(--hover);
+        }
+
+        /* Game Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+        }
+
+        .modal-content {
+            position: relative;
+            width: 90%;
+            height: 90%;
+            margin: 2% auto;
+            background: var(--secondary);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            font-size: 2rem;
+            color: var(--text);
+            cursor: pointer;
+            z-index: 2001;
+        }
+
+        .game-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Categories */
+        .categories {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            overflow-x: auto;
+            background: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        .category-btn {
+            background: var(--primary);
+            color: var(--text);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .game-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+
+            .search-bar {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">🎮 Ultimate Game Hub</div>
+            <input type="text" class="search-bar" placeholder="Search games..." id="searchInput">
+        </div>
+    </header>
+
+    <div class="categories" id="categories">
+        <button class="category-btn active" data-category="all">All Games</button>
+        <button class="category-btn" data-category="action">Action</button>
+        <button class="category-btn" data-category="puzzle">Puzzle</button>
+        <button class="category-btn" data-category="sports">Sports</button>
+        <button class="category-btn" data-category="racing">Racing</button>
+        <button class="category-btn" data-category="strategy">Strategy</button>
+    </div>
+
+    <div class="game-grid" id="gameGrid">
+        <!-- Games will be loaded here dynamically -->
+    </div>
+
+    <div class="modal" id="gameModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModal">&times;</span>
+            <iframe id="gameFrame" class="game-frame" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <script>
+        // Game data
+        const games = [
+            {
+                id: 'skribbl-io',
+                title: 'Skribbl.io',
+                category: 'casual',
+                thumbnail: 'https://example.com/skribbl.jpg',
+                url: 'https://skribbl.io'
+            },
+            {
+                id: 'smash-karts',
+                title: 'Smash Karts',
+                category: 'racing',
+                thumbnail: 'https://example.com/smash-karts.jpg',
+                url: 'https://smashkarts.io'
+            },
+            // Add all other games here following the same pattern
+        ];
+
+        // Initialize games
+        function loadGames(filter = 'all') {
+            const gameGrid = document.getElementById('gameGrid');
+            gameGrid.innerHTML = '';
+
+            const filteredGames = filter === 'all' 
+                ? games 
+                : games.filter(game => game.category === filter);
+
+            filteredGames.forEach(game => {
+                const gameCard = document.createElement('div');
+                gameCard.className = 'game-card';
+                gameCard.innerHTML = `
+                    <img src="${game.thumbnail}" alt="${game.title}" class="game-thumb">
+                    <div class="game-info">
+                        <h3 class="game-title">${game.title}</h3>
+                        <button class="play-btn" onclick="playGame('${game.id}')">Play Now</button>
+                    </div>
+                `;
+                gameGrid.appendChild(gameCard);
+            });
+        }
+
+        // Play game function
+        function playGame(gameId) {
+            const game = games.find(g => g.id === gameId);
+            const modal = document.getElementById('gameModal');
+            const gameFrame = document.getElementById('gameFrame');
+            
+            gameFrame.src = game.url;
+            modal.style.display = 'block';
+        }
+
+        // Event Listeners
+        document.getElementById('closeModal').addEventListener('click', () => {
+            const modal = document.getElementById('gameModal');
+            const gameFrame = document.getElementById('gameFrame');
+            modal.style.display = 'none';
+            gameFrame.src = '';
+        });
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const gameGrid = document.getElementById('gameGrid');
+            gameGrid.innerHTML = '';
+
+            const filteredGames = games.filter(game => 
+                game.title.toLowerCase().includes(searchTerm)
+            );
+
+            filteredGames.forEach(game => {
+                // Create game cards for filtered results
+                const gameCard = document.createElement('div');
+                gameCard.className = 'game-card';
+                gameCard.innerHTML = `
+                    <img src="${game.thumbnail}" alt="${game.title}" class="game-thumb">
+                    <div class="game-info">
+                        <h3 class="game-title">${game.title}</h3>
+                        <button class="play-btn" onclick="playGame('${game.id}')">Play Now</button>
+                    </div>
+                `;
+                gameGrid.appendChild(gameCard);
+            });
+        });
+
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelector('.category-btn.active').classList.remove('active');
+                e.target.classList.add('active');
+                loadGames(e.target.dataset.category);
+            });
+        });
+
+        // Initialize the site
+        document.addEventListener('DOMContentLoaded', () => {
+            loadGames();
+        });
+    </script>
+</body>
+</html>
+const games = [
+    {
+        id: 'slope',
+        title: 'Slope',
+        category: 'action',
+        thumbnail: 'https://slope-game.github.io/slope.jpg',
+        url: 'https://slope-game.github.io'
+    },
+    {
+        id: 'subway-surfers',
+        title: 'Subway Surfers',
+        category: 'runner',
+        thumbnail: 'https://raw.githubusercontent.com/3kh0/3kh0-assets/main/subway-surfers/subway-surfers.jpg',
+        url: 'https://raw.githack.com/3kh0/3kh0-assets/main/subway-surfers/index.html'
+    },
+    {
+        id: '1v1-lol',
+        title: '1v1.LOL',
+        category: 'shooter',
+        thumbnail: 'https://1v1.lol/splash.jpg',
+        url: 'https://1v1.lol'
+    }
+]
